@@ -164,10 +164,173 @@
         </div>
       </section>
 
+      <!-- CONTACT SECTION -->
+      <section class="contact-section" id="contact" aria-labelledby="contact-heading">
+        <div class="container contact-inner">
+
+          <!-- Left: Info -->
+          <div class="contact-info">
+            <span class="section-tag">Get In Touch</span>
+            <h2 id="contact-heading" class="section-title">Visit Us or Drop a Line</h2>
+            <p class="contact-intro">
+              We'd love to hear from you — whether it's a reservation, a custom order,
+              or just saying hello. Come find us in the heart of Lucknow.
+            </p>
+
+            <ul class="contact-details" role="list">
+              <li class="contact-detail-item">
+                <span class="contact-detail-icon" aria-hidden="true">📍</span>
+                <div>
+                  <span class="contact-detail-label">Location</span>
+                  <span class="contact-detail-value">Punjab Lahore, Pakistan</span>
+                </div>
+              </li>
+              <li class="contact-detail-item">
+                <span class="contact-detail-icon" aria-hidden="true">📞</span>
+                <div>
+                  <span class="contact-detail-label">Phone</span>
+                  <a href="tel:+918933006408" class="contact-detail-value contact-detail-link">+92 334330 06408</a>
+                </div>
+              </li>
+              <li class="contact-detail-item">
+                <span class="contact-detail-icon" aria-hidden="true">✉️</span>
+                <div>
+                  <span class="contact-detail-label">Email</span>
+                  <a href="mailto:hello@emberandbean.com" class="contact-detail-value contact-detail-link">hello@emberandbean.com</a>
+                </div>
+              </li>
+              <li class="contact-detail-item">
+                <span class="contact-detail-icon" aria-hidden="true">🕐</span>
+                <div>
+                  <span class="contact-detail-label">Hours</span>
+                  <span class="contact-detail-value">Mon – Sat: 8am – 9pm<br>Sunday: 9am – 7pm</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Right: Form -->
+          <div class="contact-form-wrap">
+            <div class="contact-form-card">
+              <h3 class="form-title">Send Us a Message</h3>
+
+              <div id="form-success" class="form-success" role="alert" aria-live="polite" hidden>
+                ☕ Thank you! We'll brew a reply and get back to you soon.
+              </div>
+
+              <div id="contact-form" novalidate>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="cf-name" class="form-label">Full Name <span class="required" aria-hidden="true">*</span></label>
+                    <input
+                      type="text"
+                      id="cf-name"
+                      name="name"
+                      class="form-input"
+                      placeholder="e.g. Mahnoor Ali"
+                      autocomplete="name"
+                      aria-required="true"
+                      aria-describedby="cf-name-error"
+                    />
+                    <span class="form-error" id="cf-name-error" role="alert" aria-live="polite"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="cf-email" class="form-label">Email Address <span class="required" aria-hidden="true">*</span></label>
+                    <input
+                      type="email"
+                      id="cf-email"
+                      name="email"
+                      class="form-input"
+                      placeholder="you@example.com"
+                      autocomplete="email"
+                      aria-required="true"
+                      aria-describedby="cf-email-error"
+                    />
+                    <span class="form-error" id="cf-email-error" role="alert" aria-live="polite"></span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="cf-phone" class="form-label">Phone Number <span class="form-optional">(optional)</span></label>
+                  <input
+                    type="tel"
+                    id="cf-phone"
+                    name="phone"
+                    class="form-input"
+                    placeholder="+92 34330 06408"
+                    autocomplete="tel"
+                    aria-describedby="cf-phone-error"
+                  />
+                  <span class="form-error" id="cf-phone-error" role="alert" aria-live="polite"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="cf-subject" class="form-label">Subject <span class="required" aria-hidden="true">*</span></label>
+                  <select
+                    id="cf-subject"
+                    name="subject"
+                    class="form-input form-select"
+                    aria-required="true"
+                    aria-describedby="cf-subject-error"
+                  >
+                    <option value="">— Select a topic —</option>
+                    <option value="reservation">Table Reservation</option>
+                    <option value="custom-order">Custom Order</option>
+                    <option value="catering">Catering Enquiry</option>
+                    <option value="feedback">Feedback</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <span class="form-error" id="cf-subject-error" role="alert" aria-live="polite"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="cf-message" class="form-label">Message <span class="required" aria-hidden="true">*</span></label>
+                  <textarea
+                    id="cf-message"
+                    name="message"
+                    class="form-input form-textarea"
+                    placeholder="Tell us how we can help..."
+                    rows="5"
+                    aria-required="true"
+                    aria-describedby="cf-message-error cf-message-count"
+                  ></textarea>
+                  <span class="form-char-count" id="cf-message-count" aria-live="polite">0 / 500</span>
+                  <span class="form-error" id="cf-message-error" role="alert" aria-live="polite"></span>
+                </div>
+
+                <div class="form-group form-checkbox-group">
+                  <label class="checkbox-label">
+                    <input
+                      type="checkbox"
+                      id="cf-consent"
+                      name="consent"
+                      class="form-checkbox"
+                      aria-required="true"
+                      aria-describedby="cf-consent-error"
+                    />
+                    <span class="checkbox-custom" aria-hidden="true"></span>
+                    <span class="checkbox-text">I agree to be contacted by Ember &amp; Bean regarding my enquiry. <span class="required" aria-hidden="true">*</span></span>
+                  </label>
+                  <span class="form-error" id="cf-consent-error" role="alert" aria-live="polite"></span>
+                </div>
+
+                <button type="button" class="btn btn-primary form-submit-btn" id="cf-submit">
+                  Send Message ☕
+                </button>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
     </main>
 
     <!-- FOOTER -->
-    <footer class="site-footer" id="contact" role="contentinfo">
+    <footer class="site-footer" role="contentinfo">
       <div class="container footer-inner">
         <div class="footer-brand">
           <span class="footer-logo">☕ Ember &amp; Bean</span>
@@ -181,10 +344,10 @@
               <span aria-hidden="true">✉️</span> hello@emberandbean.com
             </a>
             <a href="tel:+918933006408" class="footer-link" aria-label="Call us at +91 89330 06408">
-              <span aria-hidden="true">📞</span> +92 34530 06408
+              <span aria-hidden="true">📞</span> +92 34330 06408
             </a>
             <p class="footer-location">
-              <span aria-hidden="true">📍</span> Greater Lahore, Pakistan
+              <span aria-hidden="true">📍</span> Punjab Lahore, Pakistan
             </p>
           </address>
         </div>

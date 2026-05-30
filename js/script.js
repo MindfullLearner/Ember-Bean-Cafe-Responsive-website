@@ -133,4 +133,189 @@
     });
   });
 
+
+  /* ---- 6. CONTACT FORM VALIDATION ---- */
+  const submitBtn   = document.getElementById('cf-submit');
+  const formSuccess = document.getElementById('form-success');
+  const messageArea = document.getElementById('cf-message');
+  const charCount   = document.getElementById('cf-message-count');
+  const MAX_CHARS   = 500;
+
+  // Helpers
+  function getEl(id)  { return document.getElementById(id); }
+  function showError(inputEl, errorId, msg) {
+    inputEl.classList.add('input-error');
+    inputEl.classList.remove('input-success');
+    inputEl.setAttribute('aria-invalid', 'true');
+    getEl(errorId).textContent = msg;
+  }
+  function clearError(inputEl, errorId) {
+    inputEl.classList.remove('input-error');
+    inputEl.classList.add('input-success');
+    inputEl.setAttribute('aria-invalid', 'false');
+    getEl(errorId).textContent = '';
+  }
+  function clearAll(inputEl, errorId) {
+    inputEl.classList.remove('input-error', 'input-success');
+    inputEl.removeAttribute('aria-invalid');
+    getEl(errorId).textContent = '';
+  }
+
+  // Validators
+  function validateName() {
+    var el  = getEl('cf-name');
+    var val = el.value.trim();
+    if (!val) {
+      showError(el, 'cf-name-error', 'Full name is required.'); return false;
+    }
+    if (val.length < 2) {
+      showError(el, 'cf-name-error', 'Name must be at least 2 characters.'); return false;
+    }
+    if (!/^[a-zA-Z\s'.'-]+$/.test(val)) {
+      showError(el, 'cf-name-error', 'Name can only contain letters and spaces.'); return false;
+    }
+    clearError(el, 'cf-name-error'); return true;
+  }
+
+  function validateEmail() {
+    var el  = getEl('cf-email');
+    var val = el.value.trim();
+    var re  = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (!val) {
+      showError(el, 'cf-email-error', 'Email address is required.'); return false;
+    }
+    if (!re.test(val)) {
+      showError(el, 'cf-email-error', 'Please enter a valid email (e.g. you@example.com).'); return false;
+    }
+    clearError(el, 'cf-email-error'); return true;
+  }
+
+  function validatePhone() {
+    var el  = getEl('cf-phone');
+    var val = el.value.trim();
+    if (!val) { clearAll(el, 'cf-phone-error'); return true; } // optional
+    var re  = /^[+]?[\d\s\-().]{7,15}$/;
+    if (!re.test(val)) {
+      showError(el, 'cf-phone-error', 'Enter a valid phone number (7–15 digits).'); return false;
+    }
+    clearError(el, 'cf-phone-error'); return true;
+  }
+
+  function validateSubject() {
+    var el  = getEl('cf-subject');
+    if (!el.value) {
+      showError(el, 'cf-subject-error', 'Please select a subject.'); return false;
+    }
+    clearError(el, 'cf-subject-error'); return true;
+  }
+
+  function validateMessage() {
+    var el  = getEl('cf-message');
+    var val = el.value.trim();
+    if (!val) {
+      showError(el, 'cf-message-error', 'Message cannot be empty.'); return false;
+    }
+    if (val.length < 10) {
+      showError(el, 'cf-message-error', 'Message must be at least 10 characters.'); return false;
+    }
+    if (val.length > MAX_CHARS) {
+      showError(el, 'cf-message-error', 'Message cannot exceed ' + MAX_CHARS + ' characters.'); return false;
+    }
+    clearError(el, 'cf-message-error'); return true;
+  }
+
+  function validateConsent() {
+    var el = getEl('cf-consent');
+    if (!el.checked) {
+      getEl('cf-consent-error').textContent = 'You must agree before sending.';
+      return false;
+    }
+    getEl('cf-consent-error').textContent = '';
+    return true;
+  }
+
+  // Character counter
+  if (messageArea && charCount) {
+    messageArea.addEventListener('input', function () {
+      var len = messageArea.value.length;
+      charCount.textContent = len + ' / ' + MAX_CHARS;
+      if (len > MAX_CHARS) {
+        charCount.classList.add('over-limit');
+      } else {
+        charCount.classList.remove('over-limit');
+      }
+    });
+  }
+
+  // Live validation on blur (after first interaction)
+  function addBlurValidation(id, fn) {
+    var el = getEl(id);
+    if (!el) return;
+    el.addEventListener('blur', fn);
+    el.addEventListener('input', function () {
+      if (el.classList.contains('input-error')) fn();
+    });
+  }
+
+  addBlurValidation('cf-name',    validateName);
+  addBlurValidation('cf-email',   validateEmail);
+  addBlurValidation('cf-phone',   validatePhone);
+  addBlurValidation('cf-subject', validateSubject);
+  addBlurValidation('cf-message', validateMessage);
+
+  // Submit
+  if (submitBtn) {
+    submitBtn.addEventListener('click', function () {
+      var ok = [
+        validateName(),
+        validateEmail(),
+        validatePhone(),
+        validateSubject(),
+        validateMessage(),
+        validateConsent()
+      ].every(Boolean);
+
+      if (!ok) {
+        // Scroll to first error
+        var firstError = document.querySelector('.input-error, .form-checkbox.error');
+        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      // Simulate successful submission
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
+      setTimeout(function () {
+        // Reset form fields
+        ['cf-name','cf-email','cf-phone','cf-subject','cf-message'].forEach(function(id) {
+          var el = getEl(id);
+          if (el) {
+            el.value = '';
+            el.classList.remove('input-error', 'input-success');
+            el.removeAttribute('aria-invalid');
+          }
+        });
+        getEl('cf-consent').checked = false;
+        if (charCount) charCount.textContent = '0 / ' + MAX_CHARS;
+        ['cf-name-error','cf-email-error','cf-phone-error','cf-subject-error','cf-message-error','cf-consent-error']
+          .forEach(function(id) { getEl(id).textContent = ''; });
+
+        // Show success
+        if (formSuccess) {
+          formSuccess.hidden = false;
+          formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message ☕';
+
+        // Hide success after 6s
+        setTimeout(function () {
+          if (formSuccess) formSuccess.hidden = true;
+        }, 6000);
+      }, 1200);
+    });
+  }
+
 })();
