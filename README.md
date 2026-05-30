@@ -49,13 +49,11 @@ This project demonstrates a **mobile-first responsive frontend interface** with 
 
 ## 📁 Project Structure
 Ember-Bean-Cafe-Responsive-website/
-│
-├── index.html # Main HTML file with semantic structure
+├── index.html
 ├── css/
-│ └── style.css # All responsive styles (mobile-first)
-├── js/
-│ └── script.js # JavaScript interactivity
-└── README.md # Project documentation
+│    └── style.css      ← href="css/style.css"
+└── js/
+     └── script.js      ← src="js/script.js"
 
 ---
 
@@ -104,6 +102,7 @@ Ember-Bean-Cafe-Responsive-website/
 
 ### 3. Semantic HTML5 Structure
 <header> → <nav> → Logo + Navigation <main> → Hero Section → Signature Brews Section (3 <article> cards) → Why Choose Us Section → Contact Section <footer> → Contact info + Copyright ```
+
 ### 4. Modern CSS Techniques
 CSS Grid: Card layouts (1→2→3 columns responsive)
 Flexbox: Navigation, hero section, form layout
