@@ -1,29 +1,35 @@
 // ============================================================
-// routes/api.js  —  Thin route definitions only
+// routes/api.js  —  Route Definitions
+// Updated for Project 3: Added DELETE /api/orders/:id (bonus)
 // ============================================================
 
 const express  = require('express');
 const router   = express.Router();
 const h        = require('../controllers/handlers');
-const { validateContact, validateOrder, validateSubscribe } = require('../middleware/validation');
+const {
+  validateContact,
+  validateOrder,
+  validateSubscribe
+} = require('../middleware/validation');
 
 // ---- Health check ------------------------------------------
-// GET /api/health
 router.get('/health', (req, res) => {
   res.status(200).json({
     success:   true,
     message:   '☕ Ember & Bean API is running!',
-    version:   '1.0.0',
+    version:   '2.0.0',
+    database:  'MongoDB (Mongoose)',
     timestamp: new Date().toISOString(),
     endpoints: [
-      'GET  /api/health',
-      'GET  /api/menu',
-      'GET  /api/menu/:id',
-      'POST /api/orders',
-      'GET  /api/orders',
-      'POST /api/contact',
-      'GET  /api/contact/submissions',
-      'POST /api/subscribe'
+      'GET    /api/health',
+      'GET    /api/menu',
+      'GET    /api/menu/:id',
+      'POST   /api/orders',
+      'GET    /api/orders',
+      'DELETE /api/orders/:id',
+      'POST   /api/contact',
+      'GET    /api/contact/submissions',
+      'POST   /api/subscribe'
     ]
   });
 });
@@ -33,12 +39,13 @@ router.get('/menu',     h.getAllMenuItems);
 router.get('/menu/:id', h.getMenuItemById);
 
 // ---- Orders ------------------------------------------------
-router.post('/orders', validateOrder,   h.placeOrder);
-router.get ('/orders',                  h.getAllOrders);
+router.post  ('/orders',     validateOrder, h.placeOrder);
+router.get   ('/orders',                    h.getAllOrders);
+// router.delete('/orders/:id',                h.deleteOrder);   // bonus
 
 // ---- Contact -----------------------------------------------
-router.post('/contact',              validateContact, h.submitContact);
-router.get ('/contact/submissions',                   h.getContactSubmissions);
+router.post('/contact',             validateContact, h.submitContact);
+router.get ('/contact/submissions',                  h.getContactSubmissions);
 
 // ---- Newsletter --------------------------------------------
 router.post('/subscribe', validateSubscribe, h.subscribe);

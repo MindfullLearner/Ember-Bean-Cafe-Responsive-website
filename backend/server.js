@@ -1,40 +1,56 @@
 // ============================================================
-// server.js  —  Ember & Bean REST API entry point
+// server.js  —  Ember & Bean REST API Entry Point
+// Updated for Project 3: MongoDB + dotenv support
 // ============================================================
 
-const express    = require('express');
-const cors       = require('cors');
-const path       = require('path');
-const apiRoutes  = require('./routes/api');
+// Load environment variables FIRST — before any other imports
+// This makes process.env.MONGODB_URI and process.env.PORT available
+require('dotenv').config();
+
+const express   = require('express');
+const cors      = require('cors');
+const path      = require('path');
+const connectDB = require('./config/db');
+const apiRoutes = require('./routes/api');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
 // ============================================================
+// CONNECT TO MONGODB
+// Must happen before we start accepting requests
+// ============================================================
+connectDB();
+
+// ============================================================
 // GLOBAL MIDDLEWARE
 // ============================================================
 
-// CORS — open in dev, lock to your domain in production
+// CORS — allow all origins in dev, restrict in production
 app.use(cors({
-  origin:         '*',
-  methods:        ['GET', 'POST'],
+  origin:         process.env.NODE_ENV === 'production'
+                    ? 'https://yourdomain.com'   // lock down in production
+                    : '*',
+  methods:        ['GET', 'POST', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Parse JSON bodies (reject payloads > 10 kb)
+// Parse incoming JSON bodies (reject payloads > 10kb)
 app.use(express.json({ limit: '10kb' }));
 
-// Parse URL-encoded bodies (HTML form fallback)
+// Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-// Request logger
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}]  ${req.method.padEnd(6)} ${req.originalUrl}`);
-  next();
-});
+// Request logger (development only)
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}]  ${req.method.padEnd(7)} ${req.originalUrl}`);
+    next();
+  });
+}
 
 // ============================================================
-// SERVE FRONTEND (API tester UI)
+// SERVE FRONTEND STATIC FILES
 // ============================================================
 const frontendPath = path.join(__dirname, '../frontend');
 app.use(express.static(frontendPath));
@@ -45,7 +61,7 @@ app.use(express.static(frontendPath));
 app.use('/api', apiRoutes);
 
 // ============================================================
-// SPA FALLBACK — serve index.html for all other routes
+// SPA FALLBACK — serve index.html for non-API routes
 // ============================================================
 app.get('*', (req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
@@ -53,6 +69,7 @@ app.get('*', (req, res) => {
 
 // ============================================================
 // GLOBAL ERROR HANDLER
+// Catches anything thrown inside route handlers
 // ============================================================
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
@@ -75,17 +92,17 @@ app.use((err, req, res, next) => {
 });
 
 // ============================================================
-// START
+// START SERVER
 // ============================================================
 app.listen(PORT, () => {
   console.log('');
-  console.log('  ☕  Ember & Bean API');
-  console.log('  ─────────────────────────────────────────');
-  console.log(`  🚀  Server      →  http://localhost:${PORT}`);
-  console.log(`  📋  API base    →  http://localhost:${PORT}/api`);
-  console.log(`  🩺  Health      →  http://localhost:${PORT}/api/health`);
-  console.log(`  🖥️   UI Tester   →  http://localhost:${PORT}`);
-  console.log('  ─────────────────────────────────────────');
+  console.log('  ☕  Ember & Bean API  v2.0');
+  console.log('  ──────────────────────────────────────────');
+  console.log(`  🚀  Server     →  http://localhost:${PORT}`);
+  console.log(`  📋  API base   →  http://localhost:${PORT}/api`);
+  console.log(`  🩺  Health     →  http://localhost:${PORT}/api/health`);
+  console.log(`  🌍  Env        →  ${process.env.NODE_ENV || 'development'}`);
+  console.log('  ──────────────────────────────────────────');
   console.log('');
 });
 
