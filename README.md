@@ -17,7 +17,7 @@
 
 ## 📌 Live Demo
 
-🔗 **[View Live Website](https://mindfulllearner.github.io/Ember-Bean-Cafe-Responsive-website/)** 
+🔗 **[View Live Website](https://ember-bean-cafe-responsive-website.onrender.com)** 
 
 > To run the full stack version with the API, follow the local setup instructions below.
 
