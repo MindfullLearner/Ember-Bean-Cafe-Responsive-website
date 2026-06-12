@@ -6,69 +6,67 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-000000?logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=white)
 ![REST API](https://img.shields.io/badge/REST-API-blue)
 ![Responsive](https://img.shields.io/badge/Responsive-Yes-blue)
 
-> A warm, aesthetic, and fully responsive **Full Stack Web Application** for a modern coffee shop — **"Ember & Bean"**. Built as part of **Full Stack Development Internship Projects 1 & 2** at DecodeLabs.
->
-> Project 1 focused on the responsive frontend. Project 2 extended it with a complete RESTful backend API and a dark-themed API Tester UI.
+> A warm, aesthetic, and fully responsive **Full Stack Web Application** for a modern coffee shop — **"Ember & Bean"**. Built as part of **Full Stack Development Internship Projects 1, 2 & 3** at DecodeLabs.
 
 ---
 
 ## 📌 Live Demo
 
-🔗 **[View Live Website](https://ember-bean-cafe-responsive-website.onrender.com)** 
+🔗 **[View Live Website](https://ember-bean-cafe-responsive-website.onrender.com/)** (Frontend)
 
-> To run the full stack version with the API, follow the local setup instructions below.
+> Backend is deployed on Render. Contact form submissions are saved to MongoDB Atlas.
 
 ---
 
 ## 🎯 Project Overview
 
-This project is split into two phases:
+This project is split into three phases:
 
 | Phase | Focus | Tech |
 |-------|-------|------|
 | **Project 1 — Frontend** | Responsive cafe website with mobile-first design | HTML5, CSS3, JavaScript |
-| **Project 2 — Backend** | RESTful API with validation, routes, controllers, middleware | Node.js, Express.js |
+| **Project 2 — Backend API** | RESTful API with validation, routes, controllers, middleware | Node.js, Express.js |
+| **Project 3 — Database** | Data persistence with MongoDB | MongoDB Atlas, Mongoose ODM |
 
 ---
 
 ## 📁 Project Structure
 
-```
 Ember-Bean-Cafe-Responsive-website/
 │
-├── 📂 frontend/                        ← Project 1: Cafe Website (Customer-facing)
-│   ├── index.html
-│   ├── css/
-│   │   └── style.css
-│   └── js/
-│       └── script.js
+├── 📂 frontend/ ← Project 1: Cafe Website (Customer-facing)
+│ ├── index.html
+│ ├── css/
+│ │ └── style.css
+│ └── js/
+│ └── script.js
 │
-├── 📂 backend/                         ← Project 2: REST API Server
-│   ├── server.js                       ← Entry point
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── routes/
-│   │   └── api.js                      ← All route definitions
-│   ├── controllers/
-│   │   └── handlers.js                 ← Business logic
-│   ├── middleware/
-│   │   └── validation.js               ← Input validation (The Gatekeeper)
-│   └── data/
-│       └── menu.json                   ← Menu data store
-│
-├── 📂 api-tester/                      ← Project 2: Dark-themed API Tester UI
-│   ├── index.html
-│   ├── css/
-│   │   └── style.css
-│   └── js/
-│       └── script.js
+├── 📂 backend/ ← Projects 2 & 3: REST API + Database
+│ ├── server.js ← Entry point
+│ ├── package.json
+│ ├── package-lock.json
+│ ├── .env ← Environment variables (MongoDB URI)
+│ ├── config/
+│ │ └── db.js ← MongoDB connection config
+│ ├── models/ ← Mongoose schemas (NEW in Project 3)
+│ │ ├── Menu.js
+│ │ ├── Order.js
+│ │ ├── Contact.js
+│ │ └── Subscriber.js
+│ ├── routes/
+│ │ └── api.js ← All route definitions
+│ ├── controllers/
+│ │ └── handlers.js ← Business logic (with DB operations)
+│ ├── middleware/
+│ │ └── validation.js ← Input validation
+│ └── data/
+│ └── menu.json ← Initial menu data
 │
 └── README.md
-```
-
 ---
 
 ## 🚀 Getting Started
