@@ -263,10 +263,14 @@
   addBlurValidation('cf-subject', validateSubject);
   addBlurValidation('cf-message', validateMessage);
 
-  // Submit
+    // ============================================================
+  // SUBMIT HANDLER — BACKEND API INTEGRATION
+  // ============================================================
+  
   if (submitBtn) {
-    submitBtn.addEventListener('click', function () {
-      var ok = [
+    submitBtn.addEventListener('click', async function () {
+      // Validate all fields
+      const isValid = [
         validateName(),
         validateEmail(),
         validatePhone(),
@@ -275,46 +279,114 @@
         validateConsent()
       ].every(Boolean);
 
-      if (!ok) {
+      if (!isValid) {
         // Scroll to first error
-        var firstError = document.querySelector('.input-error, .form-checkbox.error');
+        const firstError = document.querySelector('.input-error, .form-checkbox.error');
         if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
 
-      // Simulate successful submission
+      // Collect form data
+      const formData = {
+        name: document.getElementById('cf-name').value.trim(),
+        email: document.getElementById('cf-email').value.trim(),
+        phone: document.getElementById('cf-phone').value.trim() || null,
+        subject: document.getElementById('cf-subject').value,
+        message: document.getElementById('cf-message').value.trim()
+      };
+
+      // Show loading state
+      const originalText = submitBtn.textContent;
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending…';
+      submitBtn.textContent = '⏳ Sending...';
 
-      setTimeout(function () {
-        // Reset form fields
-        ['cf-name','cf-email','cf-phone','cf-subject','cf-message'].forEach(function(id) {
-          var el = getEl(id);
-          if (el) {
-            el.value = '';
-            el.classList.remove('input-error', 'input-success');
-            el.removeAttribute('aria-invalid');
-          }
+      try {
+        // Send to backend API
+        const response = await fetch('http://localhost:3000/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
         });
-        getEl('cf-consent').checked = false;
-        if (charCount) charCount.textContent = '0 / ' + MAX_CHARS;
-        ['cf-name-error','cf-email-error','cf-phone-error','cf-subject-error','cf-message-error','cf-consent-error']
-          .forEach(function(id) { getEl(id).textContent = ''; });
 
-        // Show success
+        const result = await response.json();
+
+        if (result.success) {
+          // Reset form fields
+          ['cf-name', 'cf-email', 'cf-phone', 'cf-subject', 'cf-message'].forEach(function(id) {
+            const el = document.getElementById(id);
+            if (el) {
+              el.value = '';
+              el.classList.remove('input-error', 'input-success');
+              el.removeAttribute('aria-invalid');
+            }
+          });
+          const consentEl = document.getElementById('cf-consent');
+          if (consentEl) consentEl.checked = false;
+          
+          if (charCount) charCount.textContent = '0 / ' + MAX_CHARS;
+          
+          // Clear all errors
+          ['cf-name-error', 'cf-email-error', 'cf-phone-error', 'cf-subject-error', 'cf-message-error', 'cf-consent-error']
+            .forEach(function(id) {
+              const el = document.getElementById(id);
+              if (el) el.textContent = '';
+            });
+
+          // Show success message
+          if (formSuccess) {
+            formSuccess.textContent = result.message || '☕ Thank you! We\'ll brew a reply and get back to you soon.';
+            formSuccess.hidden = false;
+            formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+
+          // Auto hide success after 5 seconds
+          setTimeout(function() {
+            if (formSuccess) formSuccess.hidden = true;
+          }, 5000);
+          
+        } else {
+          // Show error from backend
+          if (formSuccess) {
+            formSuccess.textContent = '❌ ' + (result.message || 'Something went wrong. Please try again.');
+            formSuccess.hidden = false;
+            formSuccess.style.backgroundColor = '#f8d7da';
+            formSuccess.style.color = '#721c24';
+            formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          
+          // Display field errors if any
+          if (result.errors && Array.isArray(result.errors)) {
+            const errorContainer = document.getElementById('cf-message-error');
+            if (errorContainer) {
+              errorContainer.textContent = result.errors.join(', ');
+              errorContainer.style.display = 'block';
+            }
+          }
+        }
+        
+      } catch (error) {
+        console.error('Contact form error:', error);
         if (formSuccess) {
+          formSuccess.textContent = '❌ Connection error. Make sure backend server is running on http://localhost:3000';
           formSuccess.hidden = false;
+          formSuccess.style.backgroundColor = '#f8d7da';
+          formSuccess.style.color = '#721c24';
           formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-
+      } finally {
+        // Restore button
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message ☕';
-
-        // Hide success after 6s
-        setTimeout(function () {
-          if (formSuccess) formSuccess.hidden = true;
-        }, 6000);
-      }, 1200);
+        submitBtn.textContent = originalText;
+        
+        // Auto hide error after 5 seconds
+        setTimeout(function() {
+          if (formSuccess && formSuccess.textContent.includes('❌')) {
+            formSuccess.hidden = true;
+          }
+        }, 5000);
+      }
     });
   }
 
